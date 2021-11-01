@@ -4,25 +4,27 @@
     "short_name": "SC",
     "version": "1.0.2",
     "description": "Display multiple channels side by side. 複数チャンネルを並べて表示することができます。",
-    "icons": {
-        "32": "icons/icon-32.png",
-        "48": "icons/icon-48.png",
-        "128": "icons/icon-128.png"
-    },
+    "icons": {},
     "browser_action": {
-        "default_icon": {
-            "19": "icons/icon-19.png"
-        },
+        "default_icon": {},
         "default_title": "Slack ColumnsF",
         "default_popup": "src/popup.html"
     },
-    "content_scripts": [{
-        "matches": ["https://app.slack.com/client/*" ],
-        "js": ["src/content.js"],
-        "css": ["src/content.css"]
-    }],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://app.slack.com/client/*"
+            ],
+            "js": [
+                "src/content.js"
+            ],
+            "css": [
+                "src/content.css"
+            ]
+        }
+    ],
     "permissions": [
         "storage"
     ],
-    "homepage_url": "https://github.com/k8shiro/chrome_extension_slack_columns"
+    "homepage_url": "https://github.com/yamamoto-yuta/chrome_extension_slack_columns"
 }
