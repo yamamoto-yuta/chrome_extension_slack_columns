@@ -1,50 +1,49 @@
 lines = []
 
-window.onload = function() {
+window.onload = function () {
     saveOriginDOM();
-    chrome.storage.sync.get( {channels: []}, (channels)=>{ addLines(channels) });
+    chrome.storage.sync.get({ channels: [] }, (channels) => { addLines(channels) });
 };
 
 function saveOriginDOM() {
-    let originUrl = location.href ;
+    let originUrl = location.href;
     let body = document.body;
-    body.setAttribute("id", "origin")
+    body.setAttribute("id", "origin");
     let newBody = document.createElement('body');
-    newBody.appendChild(body)
-    newBody.style.display = "flex"
+    newBody.appendChild(body);
+    newBody.style.display = "flex";
+    newBody.style.overflowX = "scroll";
 
     let wrapper = document.createElement('div');
-    wrapper.setAttribute("id", "wrapper")
-    newBody.appendChild(wrapper)
+    wrapper.setAttribute("id", "wrapper");
+    newBody.appendChild(wrapper);
+
+    let mainWidth = 1000;
+    body.style.minWidth = String(mainWidth) + 'px';
 
     document.documentElement.appendChild(newBody)
 }
 
 async function addLines(channels) {
     let p = Promise.resolve();
-    for(let i = 0; i < channels['channels'].length; i++) {
-        let lineId = 'channel'+String(i)
+    for (let i = 0; i < channels['channels'].length; i++) {
+        let lineId = 'channel' + String(i)
         let lineUrl = channels['channels'][i]
         lines.push(lineId)
         await addLine(lineId, lineUrl)
     }
 
-    let originWidth = 100 / (lines.length + 2) * 2;
-    let wrapperWidth = 100 / (lines.length + 2) * lines.length;
-    document.getElementById("origin").style.width = String(originWidth) + '%';
-    document.getElementById("wrapper").style.width = String(wrapperWidth) + '%';
-
-    lineWidth = 100 / (lines.length);
+    let lineWidth = 500;
     for (let element of document.getElementsByClassName('element')) {
-        element.style.width = String(lineWidth) + '%';
+        element.style.width = String(lineWidth) + 'px';
     }
 
     fixSlackDom();
 }
 
 function addLine(lineId, lineUrl) {
-    return new Promise(resolve =>{
-        setTimeout(()=>{
+    return new Promise(resolve => {
+        setTimeout(() => {
             let element = document.createElement('div');
             element.setAttribute('class', 'element');
             document.getElementById("wrapper").appendChild(element);
@@ -53,7 +52,7 @@ function addLine(lineId, lineUrl) {
             iframe.setAttribute("id", lineId)
             iframe.setAttribute("src", lineUrl);
             element.appendChild(iframe)
-            
+
             document.getElementById(lineId).addEventListener("load", () => { iframeLoaded(lineId) });
             resolve();
         }, 100)
@@ -67,7 +66,7 @@ function fixSlackDom() {
 
     let delay = 1000;
     let tries = 10;
-    Promise.retry(()=>{
+    Promise.retry(() => {
         return new Promise((resolve, reject) => {
             document.getElementsByClassName("p-client")[0].style.width = '100%';
         })
@@ -80,12 +79,11 @@ function iframeLoaded(lineId) {
 
     let tries = 10;
     let delay = 1000;
-    Promise.retry(()=>{
+    Promise.retry(() => {
         return new Promise((resolve, reject) => {
             data1 = document.getElementById(lineId);
-            data1.contentWindow.document.getElementsByClassName('p-classic_nav__team_header')[0].style.display = "none";
-            data1.contentWindow.document.getElementsByClassName('p-workspace__sidebar')[0].style.display = "none";
-            data1.contentWindow.document.getElementsByClassName('p-workspace--context-pane-collapsed')[0].style.gridTemplateColumns = "0px auto";
+            data1.contentWindow.document.getElementsByClassName('p-workspace-layout')[0].style.gridTemplateColumns = 'auto';
+            data1.contentWindow.document.getElementsByClassName('p-workspace-layout')[0].style.gridTemplateAreas = "p-workspace__primary_view p-workspace__secondary_view";
         })
     }, tries, delay);
 }
