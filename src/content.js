@@ -28,15 +28,15 @@ async function addLines(channels) {
     let p = Promise.resolve();
     for (let i = 0; i < channels['channels'].length; i++) {
         let lineId = 'channel' + String(i)
-        let lineUrl = channels['channels'][i]
+        let lineUrl = channels['channels'][i].url
         lines.push(lineId)
         await addLine(lineId, lineUrl)
     }
 
-    let lineWidth = 500;
-    for (let element of document.getElementsByClassName('element')) {
-        element.style.width = String(lineWidth) + 'px';
-        element.style.borderLeft = '1px solid gray';
+    let elements = document.getElementsByClassName("element");
+    for (let i = 0; i < channels['channels'].length; i++) {
+        elements[i].style.width = channels['channels'][i].colWidth;
+        elements[i].style.borderLeft = '1px solid green';
     }
 
     fixSlackDom();
@@ -81,7 +81,6 @@ function iframeLoaded(lineId) {
     let tries = 10;
     let delay = 1000;
     Promise.retry(() => {
-        return new Promise((resolve, reject) => {
-        })
+        return new Promise((resolve, reject) => { })
     }, tries, delay);
 }

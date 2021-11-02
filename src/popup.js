@@ -1,33 +1,41 @@
+const WIDTH_OPTION_LIST = [
+    { "text": "Narrow", "value": "300px" },
+    { "text": "Medium", "value": "500px" },
+    { "text": "Wide", "value": "700px" },
+];
 
-function addInput(url = '') {
+const DEFAULT_WIDTH_OPTION_INDEX = 1;
+const DEFAULT_COLUMN = {
+    "colWidthSelectedIndex": DEFAULT_WIDTH_OPTION_INDEX,
+    "colWidth": WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX],
+    "url": ""
+};
+
+function addInput(channel) {
     let div = document.createElement('div');
     div.className = "flex-box my-1";
 
     // Column width
 
     let colWidth = document.createElement('select');
-    colWidth.className = "form-select";
+    colWidth.className = "form-select col-wid";
     colWidth.style.width = "auto";
 
-    let widthOptionList = [
-        { "text": "Narrow", "value": "300px" },
-        { "text": "Medium", "value": "500px" },
-        { "text": "Wide", "value": "700px" },
-    ]
-    for (let widthOption of widthOptionList) {
+
+    for (let widthOption of WIDTH_OPTION_LIST) {
         let colWidthOption = document.createElement('option');
         colWidthOption.text = widthOption.text;
         colWidthOption.value = widthOption.value;
 
         colWidth.appendChild(colWidthOption);
     }
-    colWidth.selectedIndex = 1;
+    colWidth.selectedIndex = channel.colWidthSelectedIndex;
 
     // URL input
 
     let line = document.createElement('input');
     line.type = "text";
-    line.value = url;
+    line.value = channel.url;
     line.className = "form-control mx-1 line";
 
     // Delete button
@@ -52,33 +60,44 @@ function addInput(url = '') {
 }
 
 window.onload = function () {
+
+    // Load options
+
     chrome.storage.sync.get(
         'channels',
         function (channels) {
-            console.log(channels)
-            for (let i = 0; i < channels['channels'].length; i++) {
-                if (channels['channels'][i]) {
-                    addInput(channels['channels'][i])
+            for (let channel of channels["channels"]) {
+                if (channel) {
+                    addInput(channel);
                 }
             }
         }
     );
 
+    // Add submit function to submit button
+
     let submitBtn = document.getElementById("submitLine");
     submitBtn.onclick = function () {
-        channels = []
-        for (let line of document.getElementsByClassName('line')) {
-            if (line.value) {
-                channels.push(line.value)
-            }
+        channels = [];
+
+        let colWidthList = document.getElementsByClassName("col-wid");
+        let lines = document.getElementsByClassName("line");
+        for (let i = 0; i < lines.length; i++) {
+            channels.push({
+                "colWidthSelectedIndex": colWidthList[i].selectedIndex,
+                "colWidth": colWidthList[i].value,
+                "url": lines[i].value
+            });
         }
+
         var formOptions = {
             channels: channels
         };
         chrome.storage.sync.set(formOptions, function () { });
-
     }
 
+    // Add add-line function to add button
+
     let addBtn = document.getElementById("addLine");
-    addBtn.onclick = function () { addInput() }
+    addBtn.onclick = function () { addInput(DEFAULT_COLUMN); }
 }
