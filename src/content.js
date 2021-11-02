@@ -36,6 +36,7 @@ async function addLines(channels) {
     let lineWidth = 500;
     for (let element of document.getElementsByClassName('element')) {
         element.style.width = String(lineWidth) + 'px';
+        element.style.borderLeft = '1px solid gray';
     }
 
     fixSlackDom();
@@ -81,9 +82,6 @@ function iframeLoaded(lineId) {
     let delay = 1000;
     Promise.retry(() => {
         return new Promise((resolve, reject) => {
-            data1 = document.getElementById(lineId);
-            data1.contentWindow.document.getElementsByClassName('p-workspace-layout')[0].style.gridTemplateColumns = 'auto';
-            data1.contentWindow.document.getElementsByClassName('p-workspace-layout')[0].style.gridTemplateAreas = "p-workspace__primary_view p-workspace__secondary_view";
         })
     }, tries, delay);
 }
