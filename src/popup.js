@@ -59,17 +59,39 @@ function addInput(channel) {
     lines.appendChild(div);
 }
 
+function loadDefaultSetting(defaultSetting) {
+    let colWidth = document.getElementById("defaultColWid");
+    for (let widthOption of WIDTH_OPTION_LIST) {
+        let colWidthOption = document.createElement('option');
+        colWidthOption.text = widthOption.text;
+        colWidthOption.value = widthOption.value;
+        colWidth.appendChild(colWidthOption);
+    }
+    colWidth.selectedIndex = defaultSetting.colWidthSelectedIndex;
+
+    let url = document.getElementById("defaultUrl");
+    url.value = defaultSetting.url;
+}
+
 window.onload = function () {
 
     // Load options
 
     chrome.storage.sync.get(
-        'channels',
-        function (channels) {
-            for (let channel of channels["channels"]) {
+        ['channels', 'defaultSetting'],
+        function (value) {
+            for (let channel of value.channels) {
                 if (channel) {
                     addInput(channel);
                 }
+            }
+
+            console.log(value.defaultSetting);
+
+            if (value.defaultSetting) {
+                loadDefaultSetting(value.defaultSetting);
+            } else {
+                loadDefaultSetting(DEFAULT_COLUMN);
             }
         }
     );
@@ -79,7 +101,6 @@ window.onload = function () {
     let submitBtn = document.getElementById("submitLine");
     submitBtn.onclick = function () {
         channels = [];
-
         let colWidthList = document.getElementsByClassName("col-wid");
         let lines = document.getElementsByClassName("line");
         for (let i = 0; i < lines.length; i++) {
@@ -89,11 +110,17 @@ window.onload = function () {
                 "url": lines[i].value
             });
         }
+        chrome.storage.sync.set({ channels: channels }, function () { });
+    }
 
-        var formOptions = {
-            channels: channels
-        };
-        chrome.storage.sync.set(formOptions, function () { });
+    submitBtn = document.getElementById("submitDefaultSetting");
+    submitBtn.onclick = function () {
+        defaultSetting = {
+            "colWidthSelectedIndex": document.getElementById("defaultColWid").selectedIndex,
+            "colWidth": document.getElementById("defaultColWid").value,
+            "url": document.getElementById("defaultUrl").value
+        }
+        chrome.storage.sync.set({ defaultSetting: defaultSetting }, function () { });
     }
 
     // Add add-line function to add button

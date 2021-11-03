@@ -20,12 +20,24 @@
 <body>
   <div class="container-fluid my-1">
     <h3>Column channels</h3>
-    <p>Set channel url.</p>
+    <p>Set channel URL.</p>
     <form>
       <div id="lines"></div>
       <div class="flex-box my-1">
         <button type="button" id="addLine" class="btn btn-primary mx-1"><i class="bi bi-plus"></i></button>
         <button type="button" id="submitLine" class="btn btn-primary mx-1">Submit</button>
+      </div>
+    </form>
+
+    <hr>
+
+    <h3>Add new column</h3>
+    <p>Set URL and column width when you add new column.</p>
+    <form>
+      <div class="flex-box my-1">
+        <select id="defaultColWid" class="form-select col-wid" style="width: auto"></select>
+        <input id="defaultUrl" type="text" class="form-control mx-1">
+        <button type="button" id="submitDefaultSetting" class="btn btn-primary mx-1">Submit</button>
       </div>
     </form>
   </div>
