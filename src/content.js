@@ -32,12 +32,26 @@ function saveOriginDOM() {
     body.style.minWidth = String(mainWidth) + 'px';
 
     // Sidebar
+    let sidebarWidth = "50px";
+    let sidebarSpacer = document.createElement('div');
+    sidebarSpacer.style.minWidth = sidebarWidth;
+    sidebarSpacer.style.width = sidebarWidth;
+
     let sidebar = document.createElement('div');
-    sidebar.style = "background-color: green;";
+    sidebar.style.backgroundColor = "green";
+    sidebar.style.textAlign = "center";
+    sidebar.style.zIndex = "999";
+    sidebar.style.position = "fixed";
+    sidebar.style.top = "0";
+    sidebar.style.left = "0";
+    sidebar.style.width = sidebarWidth;
+    sidebar.style.height = "100%";
+
     let addColBtn = document.createElement('button');
     addColBtn.id = "add-col-btn";
     addColBtn.innerText = "+";
-    addColBtn.style = "font-size: xxx-large; margin: 0 10px;";
+    addColBtn.style.fontSize = "xxx-large";
+
     sidebar.appendChild(addColBtn);
 
     // New parent body
@@ -50,6 +64,7 @@ function saveOriginDOM() {
     wrapper.setAttribute("id", "wrapper");
 
     // Append elements
+    newBody.appendChild(sidebarSpacer);
     newBody.appendChild(sidebar);
     newBody.appendChild(body);
     newBody.appendChild(wrapper);
