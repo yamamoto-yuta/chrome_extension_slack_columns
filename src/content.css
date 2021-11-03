@@ -16,3 +16,25 @@ iframe {
   height: 100%;
   border: 0;
 }
+
+.ext-theme {
+  background-color: green;
+}
+
+.ext-theme-col {
+  border-left: 1px solid green;
+}
+
+.sidebar {
+  text-align: center;
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+}
+
+.col-header {
+  display: flex;
+  justify-content: space-between;
+}
