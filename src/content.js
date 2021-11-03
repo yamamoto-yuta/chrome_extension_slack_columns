@@ -3,23 +3,56 @@ lines = []
 window.onload = function () {
     saveOriginDOM();
     chrome.storage.sync.get({ channels: [] }, (channels) => { addLines(channels) });
+
+    let addColBtn = document.getElementById("add-col-btn");
+    addColBtn.onclick = async function () {
+        let i = lines.length;
+
+        let lineId = 'channel' + String(i);
+        let lineUrl = "https://app.slack.com/client/T72TZP8BD/activity-page";
+        lines.push(lineId);
+        await addLine(lineId, lineUrl);
+
+        let elements = document.getElementsByClassName("element");
+        elements[i].style.minWidth = "500px";
+        elements[i].style.width = "500px";
+        elements[i].style.borderLeft = '1px solid green';
+
+        fixSlackDom();
+    }
 };
 
 function saveOriginDOM() {
     let originUrl = location.href;
+
+    // Original body
     let body = document.body;
     body.setAttribute("id", "origin");
+    let mainWidth = 1000;
+    body.style.minWidth = String(mainWidth) + 'px';
+
+    // Sidebar
+    let sidebar = document.createElement('div');
+    sidebar.style = "background-color: green;";
+    let addColBtn = document.createElement('button');
+    addColBtn.id = "add-col-btn";
+    addColBtn.innerText = "+";
+    addColBtn.style = "font-size: xxx-large; margin: 0 10px;";
+    sidebar.appendChild(addColBtn);
+
+    // New parent body
     let newBody = document.createElement('body');
-    newBody.appendChild(body);
     newBody.style.display = "flex";
     newBody.style.overflowX = "scroll";
 
+    // Wrapper
     let wrapper = document.createElement('div');
     wrapper.setAttribute("id", "wrapper");
-    newBody.appendChild(wrapper);
 
-    let mainWidth = 1000;
-    body.style.minWidth = String(mainWidth) + 'px';
+    // Append elements
+    newBody.appendChild(sidebar);
+    newBody.appendChild(body);
+    newBody.appendChild(wrapper);
 
     document.documentElement.appendChild(newBody)
 }
@@ -35,6 +68,7 @@ async function addLines(channels) {
 
     let elements = document.getElementsByClassName("element");
     for (let i = 0; i < channels['channels'].length; i++) {
+        elements[i].style.minWidth = channels['channels'][i].colWidth;
         elements[i].style.width = channels['channels'][i].colWidth;
         elements[i].style.borderLeft = '1px solid green';
     }
