@@ -18,6 +18,13 @@ window.onload = function () {
         elements[i].style.width = "500px";
         elements[i].style.borderLeft = '1px solid green';
 
+        let jumpBtnArea = document.getElementById("sidebar-jump-btn-area");
+        let jumpBtn = document.createElement('a');
+        jumpBtn.className = "btn btn-primary sidebar-jump-btn";
+        jumpBtn.innerText = "[ ]";
+        jumpBtn.href = "#el-" + lines[i];
+        jumpBtnArea.appendChild(jumpBtn);
+
         fixSlackDom();
     }
 };
@@ -39,7 +46,7 @@ function saveOriginDOM() {
 
     let sidebar = document.createElement('div');
     sidebar.id = "sidebar";
-    sidebar.className = "ext-theme sidebar";
+    sidebar.className = "container-fluid ext-theme sidebar";
     sidebar.style.width = sidebarWidth;
 
     let addColBtn = document.createElement('button');
@@ -48,7 +55,11 @@ function saveOriginDOM() {
     addColBtn.innerText = "+";
     addColBtn.style.fontSize = "xxx-large";
 
+    let jumpBtnArea = document.createElement('div');
+    jumpBtnArea.id = "sidebar-jump-btn-area";
+
     sidebar.appendChild(addColBtn);
+    sidebar.appendChild(jumpBtnArea);
 
     // New parent body
     let newBody = document.createElement('body');
@@ -84,6 +95,15 @@ async function addLines(channels) {
         elements[i].classList.add("ext-theme-col");
     }
 
+    let jumpBtnArea = document.getElementById("sidebar-jump-btn-area");
+    for (let i = 0; i < channels['channels'].length; i++) {
+        let jumpBtn = document.createElement('a');
+        jumpBtn.className = "btn btn-primary sidebar-jump-btn";
+        jumpBtn.innerText = "[ ]";
+        jumpBtn.href = "#el-" + lines[i];
+        jumpBtnArea.appendChild(jumpBtn);
+    }
+
     fixSlackDom();
 }
 
@@ -92,6 +112,7 @@ function addLine(lineIdx, lineId, lineUrl) {
         setTimeout(() => {
             let element = document.createElement('div');
             element.setAttribute('class', 'element');
+            element.setAttribute('id', "el-" + lineId);
             let wrapper = document.getElementById("wrapper")
             wrapper.appendChild(element);
 
@@ -111,6 +132,7 @@ function addLine(lineIdx, lineId, lineUrl) {
             colDelBtn.innerText = "x";
             colDelBtn.onclick = function () {
                 element.remove();
+                document.getElementsByClassName("sidebar-jump-btn")[lineIdx].remove();
                 lines.splice(lineIdx, 1);
             }
 
