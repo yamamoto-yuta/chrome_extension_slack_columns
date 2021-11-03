@@ -18,13 +18,6 @@ window.onload = function () {
         elements[i].style.width = "500px";
         elements[i].style.borderLeft = '1px solid green';
 
-        let jumpBtnArea = document.getElementById("sidebar-jump-btn-area");
-        let jumpBtn = document.createElement('a');
-        jumpBtn.className = "btn btn-primary sidebar-jump-btn";
-        jumpBtn.innerText = "[ ]";
-        jumpBtn.href = "#el-" + lines[i];
-        jumpBtnArea.appendChild(jumpBtn);
-
         fixSlackDom();
     }
 };
@@ -46,17 +39,18 @@ function saveOriginDOM() {
 
     let sidebar = document.createElement('div');
     sidebar.id = "sidebar";
-    sidebar.className = "container-fluid ext-theme sidebar";
+    sidebar.className = "bg-dark sidebar";
     sidebar.style.width = sidebarWidth;
 
     let addColBtn = document.createElement('button');
-    addColBtn.className = "btn";
+    addColBtn.className = "btn btn-primary border-no-radius-important";
     addColBtn.id = "add-col-btn";
     addColBtn.innerText = "+";
-    addColBtn.style.fontSize = "xxx-large";
 
     let jumpBtnArea = document.createElement('div');
     jumpBtnArea.id = "sidebar-jump-btn-area";
+    jumpBtnArea.style.display = "flex";
+    jumpBtnArea.style.flexFlow = "column";
 
     sidebar.appendChild(addColBtn);
     sidebar.appendChild(jumpBtnArea);
@@ -92,16 +86,8 @@ async function addLines(channels) {
     for (let i = 0; i < channels['channels'].length; i++) {
         elements[i].style.minWidth = channels['channels'][i].colWidth;
         elements[i].style.width = channels['channels'][i].colWidth;
-        elements[i].classList.add("ext-theme-col");
-    }
-
-    let jumpBtnArea = document.getElementById("sidebar-jump-btn-area");
-    for (let i = 0; i < channels['channels'].length; i++) {
-        let jumpBtn = document.createElement('a');
-        jumpBtn.className = "btn btn-primary sidebar-jump-btn";
-        jumpBtn.innerText = "[ ]";
-        jumpBtn.href = "#el-" + lines[i];
-        jumpBtnArea.appendChild(jumpBtn);
+        elements[i].classList.add("border-start");
+        elements[i].classList.add("border-primary");
     }
 
     fixSlackDom();
@@ -111,29 +97,47 @@ function addLine(lineIdx, lineId, lineUrl) {
     return new Promise(resolve => {
         setTimeout(() => {
             let element = document.createElement('div');
-            element.setAttribute('class', 'element');
-            element.setAttribute('id', "el-" + lineId);
-            let wrapper = document.getElementById("wrapper")
+            element.className = "element";
+            element.id = "el-" + lineId;
+
+            let wrapper = document.getElementById("wrapper");
             wrapper.appendChild(element);
+
+            // Jump button
+            let jumpBtnArea = document.getElementById("sidebar-jump-btn-area");
+            let jumpBtn = document.createElement('a');
+            jumpBtn.className = "btn btn-outline-primary border-no-radius-important sidebar-jump-btn";
+            jumpBtn.innerText = String(lineIdx);
+            jumpBtn.href = "#el-" + lineId;
+            jumpBtnArea.appendChild(jumpBtn);
 
             // Column header
 
             let colHeader = document.createElement('div');
-            colHeader.className = "col-header ext-theme";
+            colHeader.className = "col-header bg-dark";
 
             let colName = document.createElement('input');
             colName.type = "text";
             colName.value = lineId;
+            colName.className = "form-control border-no-radius-important";
 
             let colDelBtn = document.createElement('button');
             colDelBtn.id = "col-del-btn-" + lineId;
-            colDelBtn.className = "col-del-btn";
-            colDelBtn.style.margin = "0 10px";
+            colDelBtn.className = "btn btn-danger border-no-radius-important col-del-btn";
             colDelBtn.innerText = "x";
             colDelBtn.onclick = function () {
                 element.remove();
-                document.getElementsByClassName("sidebar-jump-btn")[lineIdx].remove();
+                jumpBtn.remove();
                 lines.splice(lineIdx, 1);
+
+                let elements = document.getElementsByClassName("element");
+                let jumpBtnList = document.getElementsByClassName("sidebar-jump-btn");
+                for (var i = 0; i < lines.length; i++) {
+                    lines[i] = 'channel' + String(i);
+                    elements[i].id = "el-" + lines[i];
+                    jumpBtnList[i].href = "#el-" + lines[i];
+                    jumpBtnList[i].innerText = i;
+                }
             }
 
             colHeader.appendChild(colName);
@@ -154,6 +158,14 @@ function addLine(lineIdx, lineId, lineUrl) {
             resolve();
         }, 100)
     })
+}
+
+function DeleteLine(lineIdx) {
+    console.log(lineIdx);
+    console.log(document.getElementsByClassName("sidebar-jump-btn"));
+    element.remove();
+    document.getElementsByClassName("sidebar-jump-btn")[lineIdx].remove();
+    lines.splice(lineIdx, 1);
 }
 
 
