@@ -38,19 +38,16 @@ function saveOriginDOM() {
     sidebarSpacer.style.width = sidebarWidth;
 
     let sidebar = document.createElement('div');
-    sidebar.style.backgroundColor = "green";
-    sidebar.style.textAlign = "center";
-    sidebar.style.zIndex = "999";
-    sidebar.style.position = "fixed";
-    sidebar.style.top = "0";
-    sidebar.style.left = "0";
+    sidebar.className = "ext-theme sidebar";
     sidebar.style.width = sidebarWidth;
-    sidebar.style.height = "100%";
 
     let addColBtn = document.createElement('button');
     addColBtn.id = "add-col-btn";
     addColBtn.innerText = "+";
     addColBtn.style.fontSize = "xxx-large";
+    // let addColIcon = document.createElement('i');
+    // addColIcon.className = "bi bi-plus";
+    // addColBtn.appendChild(addColIcon);
 
     sidebar.appendChild(addColBtn);
 
@@ -85,7 +82,7 @@ async function addLines(channels) {
     for (let i = 0; i < channels['channels'].length; i++) {
         elements[i].style.minWidth = channels['channels'][i].colWidth;
         elements[i].style.width = channels['channels'][i].colWidth;
-        elements[i].style.borderLeft = '1px solid green';
+        elements[i].className = "ext-theme-col";
     }
 
     fixSlackDom();
@@ -102,10 +99,7 @@ function addLine(lineIdx, lineId, lineUrl) {
             // Column header
 
             let colHeader = document.createElement('div');
-            colHeader.className = "col-header";
-            colHeader.style.display = "flex";
-            colHeader.style.justifyContent = "space-between";
-            colHeader.style.backgroundColor = "green";
+            colHeader.className = "col-header ext-theme";
 
             let colName = document.createElement('input');
             colName.type = "text";
