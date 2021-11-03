@@ -55,12 +55,18 @@ function saveOriginDOM() {
     addColBtn.id = "add-col-btn";
     addColBtn.innerText = "+";
 
+    let jumpMainBtn = document.createElement('a');
+    jumpMainBtn.className = "btn btn-outline-primary border-no-radius-important sidebar-jump-main-btn";
+    jumpMainBtn.innerText = "main";
+    jumpMainBtn.href = "#origin";
+
     let jumpBtnArea = document.createElement('div');
     jumpBtnArea.id = "sidebar-jump-btn-area";
     jumpBtnArea.style.display = "flex";
     jumpBtnArea.style.flexFlow = "column";
 
     sidebar.appendChild(addColBtn);
+    sidebar.appendChild(jumpMainBtn);
     sidebar.appendChild(jumpBtnArea);
 
     // New parent body
