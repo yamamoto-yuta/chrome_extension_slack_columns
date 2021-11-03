@@ -1,21 +1,29 @@
 lines = []
+let defaultSetting = {
+    "colWidth": "",
+    "url": ""
+};
 
 window.onload = function () {
     saveOriginDOM();
-    chrome.storage.sync.get({ channels: [] }, (channels) => { addLines(channels) });
+    chrome.storage.sync.get(['channels', 'defaultSetting'], (value) => {
+        addLines(value.channels);
+        defaultSetting.colWidth = value.defaultSetting.colWidth;
+        defaultSetting.url = value.defaultSetting.url;
+    });
 
     let addColBtn = document.getElementById("add-col-btn");
     addColBtn.onclick = async function () {
         let i = lines.length;
 
         let lineId = 'channel' + String(i);
-        let lineUrl = "https://app.slack.com/client/T72TZP8BD/activity-page";
+        let lineUrl = defaultSetting.url;
         lines.push(lineId);
         await addLine(i, lineId, lineUrl);
 
         let elements = document.getElementsByClassName("element");
-        elements[i].style.minWidth = "500px";
-        elements[i].style.width = "500px";
+        elements[i].style.minWidth = defaultSetting.colWidth;
+        elements[i].style.width = defaultSetting.colWidth;
         elements[i].style.borderLeft = '1px solid green';
 
         fixSlackDom();
@@ -47,12 +55,18 @@ function saveOriginDOM() {
     addColBtn.id = "add-col-btn";
     addColBtn.innerText = "+";
 
+    let jumpMainBtn = document.createElement('a');
+    jumpMainBtn.className = "btn btn-outline-primary border-no-radius-important sidebar-jump-main-btn";
+    jumpMainBtn.innerText = "main";
+    jumpMainBtn.href = "#origin";
+
     let jumpBtnArea = document.createElement('div');
     jumpBtnArea.id = "sidebar-jump-btn-area";
     jumpBtnArea.style.display = "flex";
     jumpBtnArea.style.flexFlow = "column";
 
     sidebar.appendChild(addColBtn);
+    sidebar.appendChild(jumpMainBtn);
     sidebar.appendChild(jumpBtnArea);
 
     // New parent body
@@ -75,17 +89,17 @@ function saveOriginDOM() {
 
 async function addLines(channels) {
     let p = Promise.resolve();
-    for (let i = 0; i < channels['channels'].length; i++) {
+    for (let i = 0; i < channels.length; i++) {
         let lineId = 'channel' + String(i)
-        let lineUrl = channels['channels'][i].url
+        let lineUrl = channels[i].url
         lines.push(lineId)
         await addLine(i, lineId, lineUrl)
     }
 
     let elements = document.getElementsByClassName("element");
-    for (let i = 0; i < channels['channels'].length; i++) {
-        elements[i].style.minWidth = channels['channels'][i].colWidth;
-        elements[i].style.width = channels['channels'][i].colWidth;
+    for (let i = 0; i < channels.length; i++) {
+        elements[i].style.minWidth = channels[i].colWidth;
+        elements[i].style.width = channels[i].colWidth;
         elements[i].classList.add("border-start");
         elements[i].classList.add("border-primary");
     }
