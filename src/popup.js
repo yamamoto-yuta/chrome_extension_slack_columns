@@ -86,8 +86,6 @@ window.onload = function () {
                 }
             }
 
-            console.log(value.defaultSetting);
-
             if (value.defaultSetting) {
                 loadDefaultSetting(value.defaultSetting);
             } else {
