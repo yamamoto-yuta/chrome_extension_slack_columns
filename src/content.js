@@ -11,7 +11,7 @@ window.onload = function () {
         let lineId = 'channel' + String(i);
         let lineUrl = "https://app.slack.com/client/T72TZP8BD/activity-page";
         lines.push(lineId);
-        await addLine(lineId, lineUrl);
+        await addLine(i, lineId, lineUrl);
 
         let elements = document.getElementsByClassName("element");
         elements[i].style.minWidth = "500px";
@@ -78,7 +78,7 @@ async function addLines(channels) {
         let lineId = 'channel' + String(i)
         let lineUrl = channels['channels'][i].url
         lines.push(lineId)
-        await addLine(lineId, lineUrl)
+        await addLine(i, lineId, lineUrl)
     }
 
     let elements = document.getElementsByClassName("element");
@@ -91,16 +91,48 @@ async function addLines(channels) {
     fixSlackDom();
 }
 
-function addLine(lineId, lineUrl) {
+function addLine(lineIdx, lineId, lineUrl) {
     return new Promise(resolve => {
         setTimeout(() => {
             let element = document.createElement('div');
             element.setAttribute('class', 'element');
-            document.getElementById("wrapper").appendChild(element);
+            let wrapper = document.getElementById("wrapper")
+            wrapper.appendChild(element);
+
+            // Column header
+
+            let colHeader = document.createElement('div');
+            colHeader.className = "col-header";
+            colHeader.style.display = "flex";
+            colHeader.style.justifyContent = "space-between";
+            colHeader.style.backgroundColor = "green";
+
+            let colName = document.createElement('input');
+            colName.type = "text";
+            colName.value = lineId;
+
+            let colDelBtn = document.createElement('button');
+            colDelBtn.id = "col-del-btn-" + lineId;
+            colDelBtn.className = "col-del-btn";
+            colDelBtn.style.margin = "0 10px";
+            colDelBtn.innerText = "x";
+            colDelBtn.onclick = function () {
+                element.remove();
+                lines.splice(lineIdx, 1);
+            }
+
+            colHeader.appendChild(colName);
+            colHeader.appendChild(colDelBtn);
+
+            // Slack
 
             let iframe = document.createElement("iframe");
             iframe.setAttribute("id", lineId)
             iframe.setAttribute("src", lineUrl);
+
+            // Append elements
+
+            element.appendChild(colHeader);
             element.appendChild(iframe)
 
             document.getElementById(lineId).addEventListener("load", () => { iframeLoaded(lineId) });
