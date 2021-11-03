@@ -38,16 +38,15 @@ function saveOriginDOM() {
     sidebarSpacer.style.width = sidebarWidth;
 
     let sidebar = document.createElement('div');
+    sidebar.id = "sidebar";
     sidebar.className = "ext-theme sidebar";
     sidebar.style.width = sidebarWidth;
 
     let addColBtn = document.createElement('button');
+    addColBtn.className = "btn";
     addColBtn.id = "add-col-btn";
     addColBtn.innerText = "+";
     addColBtn.style.fontSize = "xxx-large";
-    // let addColIcon = document.createElement('i');
-    // addColIcon.className = "bi bi-plus";
-    // addColBtn.appendChild(addColIcon);
 
     sidebar.appendChild(addColBtn);
 
@@ -82,7 +81,7 @@ async function addLines(channels) {
     for (let i = 0; i < channels['channels'].length; i++) {
         elements[i].style.minWidth = channels['channels'][i].colWidth;
         elements[i].style.width = channels['channels'][i].colWidth;
-        elements[i].className = "ext-theme-col";
+        elements[i].classList.add("ext-theme-col");
     }
 
     fixSlackDom();
