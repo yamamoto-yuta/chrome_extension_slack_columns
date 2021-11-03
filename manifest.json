@@ -19,7 +19,8 @@
                 "src/content.js"
             ],
             "css": [
-                "src/content.css"
+                "src/content.css",
+                "src/bootstrap/bootstrap.min.css"
             ]
         }
     ],

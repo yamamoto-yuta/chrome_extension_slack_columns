@@ -17,13 +17,13 @@ iframe {
   border: 0;
 }
 
-.ext-theme {
-  background-color: green;
-}
+/* .ext-theme {
+  background-color: lime;
+} */
 
-.ext-theme-col {
-  border-left: 1px solid green;
-}
+/* .ext-theme-col {
+  border-left: 1px solid lime;
+} */
 
 .sidebar {
   text-align: center;
@@ -32,6 +32,29 @@ iframe {
   top: 0;
   left: 0;
   height: 100%;
+  margin: 0;
+}
+
+.border-no-radius-important {
+  border-radius: 0 !important;
+}
+
+#add-col-btn {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-size: xxx-large;
+}
+
+.sidebar-jump-btn {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.col-del-btn {
+  margin: 0;
+  padding: 0;
 }
 
 .col-header {
